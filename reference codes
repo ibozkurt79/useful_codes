@@ -1,0 +1,171 @@
+PANDAS NOTES
+
+df = pd.read_csv('student_scores.csv', index_col=['Name', 'ID']) for using two columns as index
+
+pd.scatter_matix(df, figsize=(15,15));
+
+df.hist()
+df[column].value_counts().plot(kind=‘pie’, figsize=(8,8)). kind=‘scatter’, ‘box’
+df.plot(x=‘col1’, y=‘col2’ ,kind=‘scatter’)
+
+# creating to graph with same axis (we use ind to make X axis same)
+Ind = df[‘col1’].value_counts().index
+df[‘col2’].value_counts()[ind].plot(kind=‘bar’);
+
+Np.random.random(int(1e8) = np.random.random(100000000)
+
+
+CATEGORICAL VALUES SET NUMBER CLASSES
+df.cc = pd.Categorical(df.cc) # first make it categorical
+df['code'] = df.cc.cat.codes # then assign numeric classes with this code
+
+np.nanmean(arr))  
+
+numpy.nan_to_num
+numpy.nan_to_num(x)
+[source]
+Replace nan with zero and inf with finite numbers.
+Returns an array or scalar replacing Not a Number (NaN) with zero, (positive) infinity with a very large number and negative infinity with a very small (or negative) number.
+
+******************
+DECILE 
+for percent in [90, 70, 50]:
+            t = np.percentile(y_pred,percent)
+            thresholded = y_pred > t
+            row = [str(i) for i in [percent, int(len(y_pred[y_pred > t])*convert_to_monthly), precision_score(label, thresholded).round(2), recall_score(label, thresholded).round(2), accuracy_score(label, thresholded).round(2) ,f1_score(label, thresholded).round(2)]]
+            output_tables[name] += [[milestone] + row]
+            print( '\t'.join(row) )
+
+decile_lift = pd.DataFrame()
+sequence_of_interest['decile'],bins = pd.qcut(sequence_of_interest['y_pred'],10,retbins=True, labels=False)
+bins = [np.round(b,5) for b in bins]
+decile_cutoffs[name][milestone] = bins
+dl = sequence_of_interest.groupby('decile')['label'].sum().to_frame().reset_index()
+dl['milestone'] = milestone
+dl['set'] = dataset
+dl['model'] = name
+decile_lift = decile_lift.append(dl)
+
+total_orders = decile_lift.groupby(['model', 'set', 'milestone'])['label'].sum().to_frame().reset_index()
+total_orders.columns = ['model','set','milestone','total']
+top_decile_lift = decile_lift.merge(total_orders, on=['model', 'set', 'milestone'])[decile_lift.reset_index()['decile'] == 9]
+top_decile_lift['lift'] = ((top_decile_lift['label'] / top_decile_lift['total'])*10).round(1)
+top_decile_lift['set'] = pd.Categorical(top_decile_lift['set'], ["train", "val", "test"])
+formated_top_decile_list = top_decile_lift.pivot_table(columns=['milestone'], values=['lift'], index=['model', 'set'])
+formated_top_decile_list.columns = formated_top_decile_list.columns.get_level_values(1)
+formated_top_decile_list[['Grid View', 'PDP', 'Configurator','Cart', 'Checkout']]
+milestone	Grid View	PDP	Configurator	Cart	Checkout	
+model	set					
+Conversion Likelihood	train	7.0	7.5	3.1	4.6	3.1
+	val	7.2	6.7	2.8	3.9	3.4
+	test	6.7	6.8	2.7	3.9	4.1
+On the Fence	train	5.7	6.8	2.3	2.8	1.4
+	val	5.6	6.1	2.3	2.5	1.3
+	test	5.6	6.6	2.1	2.4	1.2
+***************************************************
+# head and tail 10%
+thres1, thres2 = np.quantile(test_pred, 0.1), np.quantile(test_pred, 0.9)
+print(thres1, thres2, '\n')
+pred = test_pred[(test_pred <= thres1) | (test_pred >= thres2)]
+label = test_y[(test_pred <= thres1) | (test_pred >= thres2)]
+print(pred.shape, label.shape, '\n')
+print(classification_report(label, (pred >= thres2).astype(int)), '\n')
+matrix = confusion_matrix(label, (pred >= thres2).astype(int))
+print(matrix, '\n')
+specificity1 = matrix[1][1] / (matrix[1][1] + matrix[1][0])
+specificity2 = matrix[0][0] / (matrix[0][0] + matrix[0][1])
+print('Specificity:\t', np.round(specificity1, 2), np.round(specificity2, 2))
+**********************
+Saving Keras h5 files in hdfs
+model_combined.save('timeless_prospect_model_sep18.h5')
+!hdfs dfs -copyFromLocal timeless_prospect_model_sep18.h5 /user/username/soi/LSTM/
+********************************
+ pickle.dump({"old_to_index":old_to_index, "old_to_new":old_to_new, "new_to_index":new_to_index}, open('page_encoder_sep18_prospects.pkl','wb'))
+ !hdfs dfs -copyFromLocal -f page_encoder_sep18_prospects.pkl /user/username/soi_data/ConversionLikelihood/customers
+!hdfs dfs -copyToLocal  /user/username/soi_data/ConversionLikelihood/customers/page_encoder_sep18_prospects.pkl
+
+
+#Save sample input
+sample_input = [{"session_id":session_ids[i], "hit_time_est_max":last_hit_times[i], "encoded_page_nm_sequence":X_test_sample_list[i],  "current_milestone": milestone_test_sample[i]} for i in range(100)]
+#sample_input = [{"session_id":session_ids[i], "hit_time_est_max":last_hit_times[i], "encoded_page_nm_sequence":X_test_sample_list[i], "time_on_page_sequence":T_test_sample_list[i], "current_milestone": milestone_test_sample[i]} for i in range(100)]
+json.dump(sample_input, open("sample_prospect_input_sep18.json",'w'))
+!hdfs dfs -copyFromLocal sample_prospect_input_sep18.json /user/username/soi/LSTM/
+
+3085420
+ 
+#########
+CALCULATE LIFT (from Victor kayak)
+def calculate_lift_gain(y_true, y_probs): 
+    """Calculates the lift and gain
+
+    Parameters
+    ----------
+    :param y_true: iterable, The true binary {0, 1} labels
+
+    :param y_probs: iterable, The model score output [0, 1]
+
+    Returns
+    :return lift_gain_df: Pandas DataFrame, data for lift and gain
+    """
+
+    lift_gain_df = pd.DataFrame({'score': y_probs, 'label': y_true})
+    lift_gain_df['decile'] = pd.qcut(lift_gain_df['score'], 10, np.arange(1, 11, 1))
+    pos_counts = lift_gain_df.groupby('decile')['label'].sum()
+    decile_size = lift_gain_df.groupby('decile')['score'].count()
+    mean_score = lift_gain_df.groupby('decile')['score'].mean()
+    lift_gain_df = pd.concat([pos_counts, decile_size, mean_score], axis=1).sort_index(ascending=False)
+    lift_gain_df.columns = ['pos_counts', 'decile_size', 'mean_score']
+
+    lift_gain_df['target_percentage'] = lift_gain_df['pos_counts'] / lift_gain_df['decile_size']
+    lift_gain_df['cumulative_pos'] = lift_gain_df['pos_counts'].cumsum()
+    lift_gain_df['model_take_rate'] = lift_gain_df['cumulative_pos'] / lift_gain_df['decile_size'].sum()
+
+    decile_take_rate = y_true.mean() / 10
+    lift_gain_df['baseline_take_rate'] = [decile_take_rate * i for i in range(1, 11)]
+    lift_gain_df['average_pos'] = lift_gain_df['pos_counts'].sum() / 10
+    lift_gain_df['lift'] = lift_gain_df['cumulative_pos'] / lift_gain_df['average_pos'].cumsum()
+
+    return lift_gain_df
+####################
+CALCULATE LIFT CURVE
+# Function that plots a Lift Curve using the real label values of a dataset and the probability predictions of a Machine Learning Algorithm/model
+# @Params:
+# y_val: real labels of the data
+# y_pred: probability predictions for such data
+# step: how big we want the steps in the percentiles to be
+
+def plot_Lift_curve(y_val, y_pred, step=0.01):
+    
+    #Define an auxiliar dataframe to plot the curve
+    aux_lift = pd.DataFrame()
+    #Create a real and predicted column for our new DataFrame and assign values
+    aux_lift['real'] = y_val
+    aux_lift['predicted'] = y_pred
+    #Order the values for the predicted probability column:
+    aux_lift.sort_values('predicted',ascending=False,inplace=True)
+    
+    #Create the values that will go into the X axis of our plot
+    x_val = np.arange(step,1+step,step)
+    #Calculate the ratio of ones in our data
+    ratio_ones = aux_lift['real'].sum() / len(aux_lift)
+    #Create an empty vector with the values that will go on the Y axis our our plot
+    y_v = []
+    
+    #Calculate for each x value its correspondent y value
+    for x in x_val:
+        num_data = int(np.ceil(x*len(aux_lift))) #The ceil function returns the closest integer bigger than our number 
+        data_here = aux_lift.iloc[:num_data,:]   # ie. np.ceil(1.4) = 2
+        ratio_ones_here = data_here['real'].sum()/len(data_here)
+        y_v.append(ratio_ones_here / ratio_ones)
+           
+   #Plot the figure
+    fig, axis = plt.subplots()
+    fig.figsize = (40,40)
+    axis.plot(x_val, y_v, 'g-', linewidth = 3, markersize = 5)
+    axis.plot(x_val, np.ones(len(x_val)), 'k-')
+    axis.set_xlabel('Proportion of sample')
+    axis.set_ylabel('Lift')
+    plt.title('Lift Curve')
+    plt.show()
+    # from https://towardsdatascience.com/the-lift-curve-unveiled-998851147871
+    **************
